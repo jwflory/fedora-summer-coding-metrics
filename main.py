@@ -134,7 +134,6 @@ def main():
         print("Gathering group statistics ..")
         group = GroupParser()
         group_userlist = list(group.group_users(args.group))
-        print(group_userlist)
 
     # Check if the argument type is interactive
     if args.interactive:
