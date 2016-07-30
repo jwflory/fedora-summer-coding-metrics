@@ -9,6 +9,7 @@ import calendar
 import fedmsg.meta
 import stats
 import output
+from parseGroup import GroupParser
 
 
 def interactive_input(args):
@@ -30,9 +31,10 @@ def assign_values(args):
     stats.start = args.start
     stats.end = args.end
     stats.weeks = int(args.weeks)
+    stats.group = args.group
     stats.log = args.log
     output.mode = args.mode.lower()
-    output.filename = args.output.lower()
+    output.filename = args.user.lower()
 
 
 def add_arguments(parser):
@@ -50,41 +52,22 @@ def add_arguments(parser):
     parser.add_argument('--weeks', '-w', help='Time in weeks', default=1)
 
 
-def main():
-    # fedmsg config
-    config = fedmsg.config.load_config()
-    fedmsg.meta.make_processors(**config)
-
-    # Initializing to None to prevent errors while generating multiple reports
-    stats.unicode_json = {}
-    i_count = 0
-
-    # Argument Parser initialization
-    parser = argparse.ArgumentParser(description='Fedora Statistics Gatherer')
-    add_arguments(parser)
-    args = parser.parse_args()
-
-    # Check if the argument type is interactive
-    if args.interactive:
-        interactive_input(args)
-
-    # Check if the user argument exists
-    elif args.user is None:
-        print(colored("[!] ", 'red') + "Username is required. Use -h for help")
-        return 1
+def generator(args, mode, user):
+    if mode=='group':
+        args.user = user
+        stats.values['user'] = user
 
     # Else, use the argparse values. No arguments is handled by argparse.
-    else:
-        assign_values(args)
+    assign_values(args)
     # For png and SVG, we need a drawable object to be called
     if output.mode in ['png', 'svg', 'csv'] or not stats.log and output.mode == 'text':
-        # Draw object for the above mentioned categories.
+    # Draw object for the above mentioned categories.
         draw_obj = stats.return_categories()
 
         # To handle user with no activity; TO-DO -> Make this a function
         if len(draw_obj) == 0:
-            print (colored("[!] ", 'red') + 'No activity found for user' +
-                   args.user)
+            print (colored("[!] ", 'red') + 'No activity found for user ' +
+            args.user)
             return 1
 
         # Generate the output graph objects required for calling generate_graph
@@ -129,6 +112,46 @@ def main():
                    str(args.user))
             return 1
         output.generate_graph(draw_obj, args.user)
+        stats.unicode_json = {}
+
+
+def main():
+    # fedmsg config
+    config = fedmsg.config.load_config()
+    fedmsg.meta.make_processors(**config)
+
+    # Initializing to None to prevent errors while generating multiple reports
+    stats.unicode_json = {}
+    i_count = 0
+    group_userlist = list()
+
+    # Argument Parser initialization
+    parser = argparse.ArgumentParser(description='Fedora Statistics Gatherer')
+    add_arguments(parser)
+    args = parser.parse_args()
+
+    if args.group:
+        print("Gathering group statistics ..")
+        group = GroupParser()
+        group_userlist = list(group.group_users(args.group))
+        print(group_userlist)
+
+    # Check if the argument type is interactive
+    if args.interactive:
+        interactive_input(args)
+
+    elif args.group:
+        for user in group_userlist:
+            generator(args, 'group', user)
+    # Check if the user argument exists
+    elif args.user is None :
+        if not args.group:
+            print(colored("[!] ", 'red') + "Username is required. Use -h for help")
+            return 1
+    else:
+        generator(args, 'user', args.user.lower())
+
+
 
 
 if __name__ == '__main__':

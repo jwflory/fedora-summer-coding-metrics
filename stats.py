@@ -17,6 +17,7 @@ values['page'] = 1
 values['size'] = 'small'
 category = ''
 start = ''
+group = ''
 end = ''
 logs = False
 weeks = 0
@@ -41,8 +42,8 @@ def return_json():
     total_pages = 1
 
     # Only pull the values from datagrepper if it's the first run
-    if len(unicode_json) == 0:
-        print('[*] Grabbing datagrepper values..')
+    if len(unicode_json) == 0 or unicode_json['arguments']['users'][0]!=values['user']:
+        print('[*] Grabbing datagrepper values for user ' + values['user'] + '..')
 
         # If the user is set as all, we filter it using the provided category,
         # if any
@@ -65,7 +66,7 @@ def return_json():
         print ("Total pages found : " + str(total_pages))
         total = total_pages
         # If multiple pages exist, get them all.
-        while total_pages > 1:
+        while total_pages > 0:
             print("  [*] Loading Page " + str(values['page']) + "/" + str(total))
             values['page'] += 1
             response = requests.get(baseurl, params=values)
@@ -74,6 +75,7 @@ def return_json():
             for activity in paginated_json['raw_messages']:
                 unicode_json['raw_messages'].append(activity)
             total_pages -= 1
+        values['page'] = 1
     return unicode_json
 
 # Analyzes the JSON and return categories present as a list.

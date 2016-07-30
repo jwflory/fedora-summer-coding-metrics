@@ -23,17 +23,13 @@ class GroupParser:
                 return True
 
     def group_users(self, group_name):
-        userlist = list()
-        group_json = {}
+        group_json = dict()
         account = AccountSystem(username=self.username,
                             password=self.password)
         try:
             group_json = account.group_members(group_name)
         except AuthError:
             print("[*] Invalid Username / Password")
-        for user_desc in group_json:
-            userlist.append(user_desc.values()[0])
+            return 1
+        userlist = [user_desc.values()[0] for user_desc in group_json]
         return userlist
-
-obj = GroupParser()
-print obj.group_users('commops')

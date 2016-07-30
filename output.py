@@ -13,6 +13,7 @@ import os
 # Default global variables
 subcategory_json = None
 category_json = None
+path = ''
 filename = stats.values['user']
 csv_init = text_init = False
 mode = 'text'
@@ -22,19 +23,18 @@ cat = None
 # Gets a drawable object argument and renders an SVG Image of it.
 def draw_svg(graph_obj):
     if cat is None:
-        fname = filename + '_main' + '.svg'
+        fname = path + stats.values['user'] + '/' + filename + '_main' + '.svg'
     else:
-        fname = filename + "_" + cat + '.svg'
+        fname = path + stats.values['user'] + '/' + filename + "_" + cat + '.svg'
     graph_obj.render_to_file(fname)
-    os.system("firefox " + fname)
 
 
 # Gets a drawable object argument and renders a PNG image of it.
 def draw_png(graph_obj):
     if cat is None:
-        fname = filename + '_main' + '.png'
+        fname = path + stats.values['user'] + '/' + filename + '_main' + '.png'
     else:
-        fname = filename + "_" + cat + '.png'
+        fname = path + stats.values['user'] + '/' + filename + "_" + cat + '.png'
         graph_obj.render_to_png(fname)
 
 
@@ -60,7 +60,7 @@ def draw_bar(output_json, title):
 # Generates CSV report for the user from the dictionary passed
 def save_csv(output_json):
     global csv_init, cat
-    fname = filename + '_main.csv'
+    fname = path + stats.values['user'] + '/' + filename + '_main.csv'
     fout = open(fname, 'a')
     csvw = csv.writer(fout)
 
@@ -101,7 +101,7 @@ def show_gource(unicode_json):
     colors = colors * n_wraps
     color_lookup = dict(zip(procs, colors))
 
-    fname = filename + '_main.gource'
+    fname = path + stats.values['user'] + '/' + filename  + '_main.gource'
     fout = open(fname, 'w')
     for activity in unicode_json['raw_messages']:
         try:
@@ -121,7 +121,7 @@ def show_gource(unicode_json):
 
 # Saves category-wise text report of a user.
 def save_text_log(unicode_json):
-    fname = filename + '_main.txt'
+    fname = path + stats.values['user'] + '/' + filename + '_main.txt'
     fout = open(fname, 'w')
     # Category-wise Log
     fout.write("\n\n*** Category-wise activities ***\n\n")
@@ -149,7 +149,8 @@ def save_text_log(unicode_json):
 
 def save_text_metrics(output_json):
     global text_init
-    fname = filename + '_main.txt'
+    fname = path + stats.values['user'] + '/' + filename + '_main.txt'
+    print(fname)
     fout = open(fname, 'a')
     # Write the dates into CSV
     if not text_init and stats.end and stats.start:
@@ -182,7 +183,7 @@ def save_text_metrics(output_json):
 
 # Saves the markdown version of the text log
 def save_markdown(unicode_json):
-    fname = filename + '_main.md'
+    fname = path + stats.values['user'] + '/' + filename + '_main.md'
     fout = open(fname, 'w')
     # Category-wise Log, markdown ready
     fout.write("\n\n### Category-wise activities\n\n")
@@ -211,7 +212,7 @@ def save_markdown(unicode_json):
 
 # Saves the JSON as a file.
 def save_json(unicode_json):
-    fname = filename + '_main.json'
+    fname = path + stats.values['user'] + '/' + filename + '_main.json'
     try:
         with open(fname, 'w') as outfile:
             json.dump(unicode_json, outfile)
@@ -221,6 +222,17 @@ def save_json(unicode_json):
 
 # Identifies categories & generates drawable objects for the above functions.
 def generate_graph(output_json, title, category=None, gtype=None):
+    global path
+    if stats.group:
+        path = stats.group + '/'
+        if not os.path.exists(stats.group):
+            os.makedirs(stats.group)
+        if not os.path.exists(path + stats.values['user']):
+            os.makedirs(path + stats.values['user'])
+    else:
+        if not os.path.exists(stats.values['user']):
+            os.makedirs(stats.values['user'])
+
     global cat
     cat = category
     graph_obj = None
