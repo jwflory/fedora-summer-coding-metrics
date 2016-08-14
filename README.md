@@ -49,6 +49,10 @@ One-liner uses the classic argument parsing method to generate output. This is u
 
 * Takes a single word string input. This will define the output file name. This option is to be combined with the `--mode/-m` argument. Please note that this option **DOES NOT** require an extension type. For instance, if you need an SVG output with the name `nobody.svg`, the --output flag should be set as `nobody` and not `nobody.svg`. the default value is `stats`.
 
+`--group / -g`
+
+* Takes a single word string input. This will take a group name of FAS as an argument. Useful for pulling statistics of an entire group. Please note that this requires authentication and the credentials are to be put in `fas_credentials.cfg` file. Not to be combined with `--user / -u`
+
 `--logging / -l`
 
 * Stores the value as `True` if called, does not require any argument. When logging is set, all the logs from start to end / mentioned weeks will be pulled from datagrepper and dumped into a text file according to the naming convention.
