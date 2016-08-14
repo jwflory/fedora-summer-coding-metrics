@@ -23,18 +23,22 @@ cat = None
 # Gets a drawable object argument and renders an SVG Image of it.
 def draw_svg(graph_obj):
     if cat is None:
-        fname = path + stats.values['user'] + '/' + filename + '_main' + '.svg'
+        fname = "%s%s/%s_main.svg" % (path, stats.values['user'], filename)
+        print("[*] Output saved to ", fname)
     else:
-        fname = path + stats.values['user'] + '/' + filename + "_" + cat + '.svg'
+        fname = "%s%s/%s_%smain.svg" % (path, stats.values['user'],
+                                        filename, cat)
+        print("[*] Output saved to ", fname)
     graph_obj.render_to_file(fname)
 
 
 # Gets a drawable object argument and renders a PNG image of it.
 def draw_png(graph_obj):
     if cat is None:
-        fname = path + stats.values['user'] + '/' + filename + '_main' + '.png'
+        fname = "%s%s/%s_main.png" % (path, stats.values['user'], filename)
     else:
-        fname = path + stats.values['user'] + '/' + filename + "_" + cat + '.png'
+        fname = "%s%s/%s_%smain.png" % (path, stats.values['user'],
+                                        filename, cat)
         graph_obj.render_to_png(fname)
 
 
@@ -60,7 +64,7 @@ def draw_bar(output_json, title):
 # Generates CSV report for the user from the dictionary passed
 def save_csv(output_json):
     global csv_init, cat
-    fname = path + stats.values['user'] + '/' + filename + '_main.csv'
+    fname = "%s%s/%s_main.csv" % (path, stats.values['user'], filename)
     fout = open(fname, 'a')
     csvw = csv.writer(fout)
 
@@ -91,6 +95,7 @@ def save_csv(output_json):
     csvw.writerows(data)
     fout.close()
 
+
 def show_gource(unicode_json):
 
     # Thanks Ralph. Color codes taken from fedmsg2gource
@@ -101,7 +106,7 @@ def show_gource(unicode_json):
     colors = colors * n_wraps
     color_lookup = dict(zip(procs, colors))
 
-    fname = path + stats.values['user'] + '/' + filename  + '_main.gource'
+    fname = "%s%s/%s_main.gource" % (path, stats.values['user'], filename)
     fout = open(fname, 'w')
     for activity in unicode_json['raw_messages']:
         try:
@@ -112,16 +117,17 @@ def show_gource(unicode_json):
         fout.write(u"%i|%s|A|%s|%s\n" % (
             activity['timestamp'],
             user,
-            activity['topic'].split('.')[4] + " - "+ activity['topic'].split('.')[3],
+            activity['topic'].split('.')[4] + " - " + activity['topic'].split('.')[3],
             color_lookup[activity['topic'].split('.')[3]],
         ))
     fout.close()
-    os.system("cat " + fname + " | gource --log-format custom --highlight-user "
+    os.system("cat " + fname + " |gource --log-format custom --highlight-user "
               + stats.values['user'] + " -c 0.5 -")
+
 
 # Saves category-wise text report of a user.
 def save_text_log(unicode_json):
-    fname = path + stats.values['user'] + '/' + filename + '_main.txt'
+    fname = "%s%s/%s_main.txt" % (path, stats.values['user'], filename)
     fout = open(fname, 'w')
     # Category-wise Log
     fout.write("\n\n*** Category-wise activities ***\n\n")

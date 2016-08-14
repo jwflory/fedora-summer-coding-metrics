@@ -42,9 +42,9 @@ def add_arguments(parser):
     parser.add_argument('--end', '-e', help="End Date", default='')
     parser.add_argument('--group', '-g', help="FAS Group", default='')
     parser.add_argument('--interactive', '-i', help="Enable interactive mode",
-                            action='store_true')
+                        action='store_true')
     parser.add_argument('--log', '-l', help="Enable full log reporting",
-                            action='store_true')
+                        action='store_true')
     parser.add_argument('--mode', '-m', help="Type of Output", default='text')
     parser.add_argument('--output', '-o', help="Output name", default='stats')
     parser.add_argument('--start', '-s', help="Start Date", default='')
@@ -53,7 +53,7 @@ def add_arguments(parser):
 
 
 def generator(args, mode, user):
-    if mode=='group':
+    if mode == 'group':
         args.user = user
         stats.values['user'] = user
 
@@ -61,13 +61,13 @@ def generator(args, mode, user):
     assign_values(args)
     # For png and SVG, we need a drawable object to be called
     if output.mode in ['png', 'svg', 'csv'] or not stats.log and output.mode == 'text':
-    # Draw object for the above mentioned categories.
+        # Draw object for the above mentioned categories.
         draw_obj = stats.return_categories()
 
         # To handle user with no activity; TO-DO -> Make this a function
         if len(draw_obj) == 0:
             print (colored("[!] ", 'red') + 'No activity found for user ' +
-            args.user)
+                   args.user)
             return 1
 
         # Generate the output graph objects required for calling generate_graph
@@ -143,14 +143,12 @@ def main():
         for user in group_userlist:
             generator(args, 'group', user)
     # Check if the user argument exists
-    elif args.user is None :
+    elif args.user is None:
         if not args.group:
             print(colored("[!] ", 'red') + "Username is required. Use -h for help")
             return 1
     else:
         generator(args, 'user', args.user.lower())
-
-
 
 
 if __name__ == '__main__':

@@ -42,7 +42,7 @@ def return_json():
     total_pages = 1
 
     # Only pull the values from datagrepper if it's the first run
-    if len(unicode_json) == 0 or unicode_json['arguments']['users'][0]!=values['user']:
+    if len(unicode_json) == 0 or unicode_json['arguments']['users'][0] != values['user']:
         print('[*] Grabbing datagrepper values for user ' + values['user'] + '..')
 
         # If the user is set as all, we filter it using the provided category,
@@ -95,6 +95,7 @@ def return_categories():
 
 # Given a category, looks for subcategories in the category and returns a
 # sub-category counter.
+
 
 def return_subcategories(category):
     subcat_list = list()
