@@ -144,8 +144,11 @@ def save_text_log(unicode_json):
                         category.capitalize() +
                         " **\n")
                     flag = False
-                fout.write("* " + fedmsg.meta.msg2subtitle(activity).encode(
-                    'ascii', errors="ignore") + "\n")
+		try:
+                	fout.write("* " + fedmsg.meta.msg2subtitle(activity).encode(
+                    		'utf-8') + "\n")
+		except AttributeError:
+			pass
         fout.write("\nTotal Entries in category : " + str(actcount) + "\n")
         fout.write("\nPercentage participation in category : " +
                    str(round(100 * actcount /
@@ -206,8 +209,11 @@ def save_markdown(unicode_json):
                         category.capitalize() +
                         "\n")
                     flag = False
-                fout.write("* " + fedmsg.meta.msg2subtitle(activity).encode(
-                    'ascii', errors='ignore') + "\n")
+		try:
+                	fout.write("* " + fedmsg.meta.msg2subtitle(activity).encode(
+                    	'utf-8', errors='ignore') + "\n")
+		except AttributeError:
+			pass
         fout.write("\n* **Total Entries in category :** " +
                    str(actcount) + "\n")
         fout.write("\n* **Percentage participation in category :** " +
