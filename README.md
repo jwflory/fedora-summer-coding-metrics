@@ -19,15 +19,15 @@ One-liner uses the classic argument parsing method to generate output. This is u
 
 `--interactive / -i`
 
-* Launches the tool in interactive mode. Does not require any further arguments.
+* Launches the tool in interactive mode. Does not require any further arguments. Some of the argparse variables are yet to be implemented.
 
 `--user / -u`
 
-* Takes any FAS Username as argument. There is no default value and the tool will throw an error if this argument is left blank/not used.
+* Takes any FAS Username as argument. There is no default value and the tool will throw an error if this argument is left blank/not used. This argument can also take the value `all`. If `user` is set as `all`, then the unfiltered data is pulled from datagrepper.
 
 `--start / -s`
 
-* Takes a date as input in the format `MM/DD/YYYY` as input, that determines the starting date for which the data is required. This will be internally converted to the epoch time.
+* Takes a date as input in the format `MM/DD/YYYY` as input, that determines the starting date for which the data is required. This will be internally converted to the epoch time. If this parameter is set along with `--end`, `--delta` is ignored.
 
 `--end / -e`
 
@@ -35,7 +35,7 @@ One-liner uses the classic argument parsing method to generate output. This is u
 
 `--weeks / -w`
 
-* Takes an integer value to represent number of weeks. Converts it into timedelta. (1week = 604,800 seconds). Default value is 1. This values is ignored if the `--start` and `--end` values are set.
+* Takes an integer value to represent number of weeks. Converts it into time-delta. (1week = 604,800 seconds). Default value is 1. This values is ignored if the `--start` and `--end` values are set.
 
 `--mode / -m`
 
@@ -86,6 +86,10 @@ This will create `stats.svg` in your `$pwd`.
 * Generate statistics of user foo in `.png` format with output name as `foo_stats.png`
 
 `python main.py --user=foo --mode=png --output=foo_stats`
+
+* Generate data between specific dates and locally save as JSON
+
+`python main.py --user=foo --mode=json --start=05/23/2016 --end=05/28/2016`
 
 #### Basic Troubleshooting :
 
