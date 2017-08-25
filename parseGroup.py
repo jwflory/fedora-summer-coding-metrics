@@ -1,4 +1,4 @@
-import ConfigParser
+import configparser
 import os.path
 from fedora.client import AccountSystem, AuthError
 

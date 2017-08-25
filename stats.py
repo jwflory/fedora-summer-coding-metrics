@@ -43,7 +43,7 @@ def return_json():
 
     # Only pull the values from datagrepper if it's the first run
     if len(unicode_json) == 0 or unicode_json['arguments']['users'][0] != values['user']:
-        print('[*] Grabbing datagrepper values for user ' + values['user'] + '..')
+        print('[*] Fetching data of user ' + values['user'] + '..')
 
         # If the user is set as all, we filter it using the provided category,
         # if any

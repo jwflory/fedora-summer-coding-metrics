@@ -11,7 +11,7 @@ import stats
 import output
 from parseGroup import GroupParser
 
-
+i_count = 0
 def interactive_input(args):
     stats.values['user'] = str(input("FAS Username (required) \t: ")).lower()
     stats.values['delta'] = 604800 * int(input("Number of weeks (default : 1)\t: "))
@@ -53,6 +53,7 @@ def add_arguments(parser):
 
 
 def generator(args, mode, user):
+    i_count = 0
     if mode == 'group':
         args.user = user
         stats.values['user'] = user
@@ -116,6 +117,7 @@ def generator(args, mode, user):
 
 
 def main():
+
     # fedmsg config
     config = fedmsg.config.load_config()
     fedmsg.meta.make_processors(**config)
