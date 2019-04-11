@@ -2,26 +2,30 @@ from __future__ import print_function
 from __future__ import absolute_import
 from termcolor import colored
 from six.moves import input
-import os
 import fedmsg
 import argparse
-import calendar
 import fedmsg.meta
 import stats
 import output
 from parseGroup import GroupParser
 
+
 i_count = 0
+
+
 def interactive_input(args):
     stats.values['user'] = str(input("FAS Username (required) \t: ")).lower()
-    stats.values['delta'] = 604800 * int(input("Number of weeks (default : 1)\t: "))
+    stats.values['delta'] = 604800 * int(input(
+        "Number of weeks (default : 1)\t: "))
     stats.weeks = int(args.weeks)
-    stats.category = str(input("Enter category (default : None)\t: ")).lower() or ''
+    stats.category = str(input(
+        "Enter category (default : None)\t: ")).lower() or ''
     stats.start = str(input("Start Time (MM/DD/YYYY) \t: ")) or ''
     stats.end = str(input("Start Time (MM/DD/YYYY) \t: ")) or ''
-    output.mode = str(input("Output Type (default : text) \t: ")).lower() or 'text'
-    output.filename = str(input("Filename [default : $username] \t: ")).lower() or \
-        stats.values['user']
+    output.mode = str(input(
+        "Output Type (default : text) \t: ")).lower() or 'text'
+    output.filename = str(input(
+        "Filename [default : $username] \t: ")).lower() or stats.values['user']
 
 
 def assign_values(args):
@@ -61,19 +65,23 @@ def generator(args, mode, user):
     # Else, use the argparse values. No arguments is handled by argparse.
     assign_values(args)
     # For png and SVG, we need a drawable object to be called
-    if output.mode in ['png', 'svg', 'csv'] or not stats.log and output.mode == 'text':
+    if output.mode in ['png', 'svg', 'csv'] \
+            or not stats.log \
+            and output.mode == 'text':
         # Draw object for the above mentioned categories.
         draw_obj = stats.return_categories()
 
         # To handle user with no activity; TO-DO -> Make this a function
         if len(draw_obj) == 0:
-            print (colored("[!] ", 'red') + 'No activity found for user ' +
-                   args.user)
+            print(colored("[!] ", 'red')
+                  + 'No activity found for user '
+                  + args.user)
             return 1
 
         # Generate the output graph objects required for calling generate_graph
-        output.generate_graph(draw_obj, "Topic distribution of " +
-                                        stats.values['user'], None, 'bar')
+        output.generate_graph(
+            draw_obj,
+            "Topic distribution of " + stats.values['user'], None, 'bar')
         draw_obj2 = stats.return_subcategories(stats.category)
         interactions = stats.return_interactions(draw_obj2)
 
@@ -81,10 +89,10 @@ def generator(args, mode, user):
         if stats.category != '':
             output.generate_graph(
                 draw_obj2,
-                "Category: " +
-                stats.category +
-                "\nUser: " +
-                args.user,
+                "Category: "
+                + stats.category
+                + "\nUser: "
+                + args.user,
                 stats.category,
                 'pie')
 
@@ -94,13 +102,13 @@ def generator(args, mode, user):
                 i_count += 1
                 output.generate_graph(
                     interactions[keys],
-                    "Interaction with " +
-                    str(keys) +
-                    "\nCategory:  " +
-                    stats.category.capitalize(),
-                    stats.category +
-                    "_" +
-                    keys,
+                    "Interaction with "
+                    + str(keys)
+                    + "\nCategory:  "
+                    + stats.category.capitalize(),
+                    stats.category
+                    + "_"
+                    + keys,
                     'bar')
 
     # If not image, check if the input matches any of the text based inputs
@@ -109,8 +117,8 @@ def generator(args, mode, user):
 
         # To handle user with no activity
         if draw_obj['total'] == 0:
-            print (colored("[!] ", 'red') + 'No activity found for user ' +
-                   str(args.user))
+            print(colored("[!] ", 'red') + 'No activity found for user '
+                  + str(args.user))
             return 1
         output.generate_graph(draw_obj, args.user)
         stats.unicode_json = {}
@@ -124,7 +132,7 @@ def main():
 
     # Initializing to None to prevent errors while generating multiple reports
     stats.unicode_json = {}
-    i_count = 0
+#     i_count = 0
     group_userlist = list()
 
     # Argument Parser initialization
@@ -147,7 +155,8 @@ def main():
     # Check if the user argument exists
     elif args.user is None:
         if not args.group:
-            print(colored("[!] ", 'red') + "Username is required. Use -h for help")
+            print(colored(
+                "[!] ", 'red') + "Username is required. Use -h for help")
             return 1
     else:
         generator(args, 'user', args.user.lower())

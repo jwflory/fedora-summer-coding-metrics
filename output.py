@@ -1,6 +1,4 @@
-from __future__ import absolute_import
-from __future__ import print_function
-from datetime import date, timedelta
+# from datetime import date, timedelta
 import fedmsg.meta
 import fedmsg
 import stats
@@ -78,8 +76,8 @@ def save_csv(output_json):
     # Initial heading row
     data = [['Username', 'Category', 'Activity Count', 'Percentage'], []]
     for key in output_json:
-        percent = round(output_json[key] / float(sum(output_json.values())) *
-                        100, 2)
+        percent = round(output_json[key] / float(sum(output_json.values()))
+                        * 100, 2)
         if cat is not None and cat.capitalize() != key.capitalize():
             data.append([stats.values['user'],
                          cat.capitalize() + "." + key.capitalize(),
@@ -117,7 +115,9 @@ def show_gource(unicode_json):
         fout.write(u"%i|%s|A|%s|%s\n" % (
             activity['timestamp'],
             user,
-            activity['topic'].split('.')[4] + " - " + activity['topic'].split('.')[3],
+            activity['topic'].split('.')[4]
+            + " - "
+            + activity['topic'].split('.')[3],
             color_lookup[activity['topic'].split('.')[3]],
         ))
     fout.close()
@@ -140,19 +140,24 @@ def save_text_log(unicode_json):
                 # Print the category once
                 if flag is True:
                     fout.write(
-                        "\n\n** Category : " +
-                        category.capitalize() +
-                        " **\n")
+                        "\n\n** Category : "
+                        + category.capitalize()
+                        + " **\n")
                     flag = False
     try:
-                	fout.write("* " + fedmsg.meta.msg2subtitle(activity).encode(
-                    		'utf-8') + "\n")
+        fout.write(
+            "* "
+            + fedmsg.meta.msg2subtitle(activity).encode('utf-8')
+            + "\n")
     except AttributeError:
         pass
         fout.write("\nTotal Entries in category : " + str(actcount) + "\n")
-        fout.write("\nPercentage participation in category : " +
-                   str(round(100 * actcount /
-                       float(unicode_json['total']), 2)) + "\n")
+        fout.write("\nPercentage participation in category : "
+                   + str(round(100
+                               * actcount
+                               / float(unicode_json['total']),
+                               2))
+                   + "\n")
     fout.close()
 
 
@@ -172,8 +177,10 @@ def save_text_metrics(output_json):
     # Initial heading row
     data = 'Username\t\tCategory\t\tCount\t\tPercentage\n'
     for key in output_json:
-        percent = round(output_json[key] / float(sum(output_json.values())) *
-                        100, 2)
+        percent = round(
+            output_json[key]
+            / float(sum(output_json.values()))
+            * 100, 2)
         if cat is not None and cat.capitalize() != key.capitalize():
             data += '%s\t\t%s\t\t%d\t\t%s\n' % (
                 stats.values['user'],
@@ -205,20 +212,28 @@ def save_markdown(unicode_json):
                 # Print the category once
                 if flag is True:
                     fout.write(
-                        "\n\n#### Category : " +
-                        category.capitalize() +
-                        "\n")
+                        "\n\n#### Category : "
+                        + category.capitalize()
+                        + "\n")
                     flag = False
     try:
-                	fout.write("* " + fedmsg.meta.msg2subtitle(activity).encode(
-                    	'utf-8', errors='ignore') + "\n")
+        fout.write(
+            "* "
+            + fedmsg.meta.msg2subtitle(activity).encode(
+                'utf-8', errors='ignore')
+            + "\n")
     except AttributeError:
         pass
-        fout.write("\n* **Total Entries in category :** " +
-                   str(actcount) + "\n")
-        fout.write("\n* **Percentage participation in category :** " +
-                   str(round(100 * actcount /
-                       float(unicode_json['total']), 2)) + "\n")
+        fout.write("\n* **Total Entries in category :** "
+                   + str(actcount)
+                   + "\n")
+        fout.write("\n* **Percentage participation in category :** "
+                   + str(round(
+                       100
+                       * actcount
+                       / float(unicode_json['total']),
+                       2))
+                   + "\n")
     fout.close()
 
 

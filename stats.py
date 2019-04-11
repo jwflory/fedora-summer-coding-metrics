@@ -1,7 +1,4 @@
-from __future__ import absolute_import
-from __future__ import print_function
-import fedmsg
-import fedmsg.meta
+# import fedora_messaging
 import calendar
 import json
 import requests
@@ -29,8 +26,8 @@ def return_epoch(time):
     if time == '':
         return ''
     tup = map(int, time.split('/'))
-    l = (tup[2], tup[0], tup[1], 0, 0, 0)
-    epochs = calendar.timegm(l)
+    tmp_list = (tup[2], tup[0], tup[1], 0, 0, 0)
+    epochs = calendar.timegm(tmp_list)
     return (int(epochs))
 
 # Checks if unicode_json is empty, pulls datagrepper values and returns
@@ -42,7 +39,8 @@ def return_json():
     total_pages = 1
 
     # Only pull the values from datagrepper if it's the first run
-    if len(unicode_json) == 0 or unicode_json['arguments']['users'][0] != values['user']:
+    if len(unicode_json) == 0 or \
+            unicode_json['arguments']['users'][0] != values['user']:
         print('[*] Fetching data of user ' + values['user'] + '..')
 
         # If the user is set as all, we filter it using the provided category,
@@ -63,11 +61,13 @@ def return_json():
             response = requests.get(baseurl, params=values)
         unicode_json = json.loads(response.text)
         total_pages = unicode_json['pages']
-        print ("Total pages found : " + str(total_pages))
+        print("Total pages found : " + str(total_pages))
         total = total_pages
         # If multiple pages exist, get them all.
         while total_pages > 0:
-            print("  [*] Loading Page " + str(values['page']) + "/" + str(total))
+            print("  [*] Loading Page "
+                  + str(values['page'])
+                  + "/" + str(total))
             values['page'] += 1
             response = requests.get(baseurl, params=values)
             paginated_json = json.loads(response.text)
@@ -116,7 +116,7 @@ def return_subcategories(category):
 
 def return_interactions(subcategories):
     interaction_dict = dict()
-    interaction_list = list()
+#    interaction_list = list()
 
     # Initializing the dictionary
     for object in subcategories:
