@@ -1,10 +1,7 @@
-from __future__ import print_function
-from __future__ import absolute_import
 from termcolor import colored
 from six.moves import input
-import fedmsg
+# import fedora_messaging as fm
 import argparse
-import fedmsg.meta
 import stats
 import output
 from parseGroup import GroupParser
@@ -126,9 +123,9 @@ def generator(args, mode, user):
 
 def main():
 
-    # fedmsg config
-    config = fedmsg.config.load_config()
-    fedmsg.meta.make_processors(**config)
+    # fedora-messaging (fm) config
+    # config = fm.config.load_config()
+    # fm.meta.make_processors(**config)
 
     # Initializing to None to prevent errors while generating multiple reports
     stats.unicode_json = {}

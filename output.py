@@ -1,6 +1,5 @@
 # from datetime import date, timedelta
-import fedmsg.meta
-import fedmsg
+import fedora_messaging as fm
 import stats
 import pygal
 import math
@@ -97,7 +96,7 @@ def save_csv(output_json):
 def show_gource(unicode_json):
 
     # Thanks Ralph. Color codes taken from fedmsg2gource
-    procs = [proc.__name__.lower() for proc in fedmsg.meta.processors]
+    procs = [proc.__name__.lower() for proc in fm.meta.processors]
     colors = ["FFFFFF", "008F37", "FF680A", "CC4E00",
               "8F0058", "8F7E00", "37008F", "7E008F"]
     n_wraps = int(math.ceil(len(procs) / float(len(colors))))
@@ -108,7 +107,7 @@ def show_gource(unicode_json):
     fout = open(fname, 'w')
     for activity in unicode_json['raw_messages']:
         try:
-            user = list(fedmsg.meta.msg2usernames(activity))[0]
+            user = list(fm.meta.msg2usernames(activity))[0]
         except IndexError:
             user = stats.values['user']
 
@@ -147,7 +146,7 @@ def save_text_log(unicode_json):
     try:
         fout.write(
             "* "
-            + fedmsg.meta.msg2subtitle(activity).encode('utf-8')
+            + fm.meta.msg2subtitle(activity).encode('utf-8')
             + "\n")
     except AttributeError:
         pass
@@ -219,7 +218,7 @@ def save_markdown(unicode_json):
     try:
         fout.write(
             "* "
-            + fedmsg.meta.msg2subtitle(activity).encode(
+            + fm.meta.msg2subtitle(activity).encode(
                 'utf-8', errors='ignore')
             + "\n")
     except AttributeError:
